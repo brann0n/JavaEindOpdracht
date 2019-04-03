@@ -7,6 +7,7 @@
  */
 package javaeindopdracht;
 
+import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
@@ -123,13 +124,13 @@ public class Kampioenschap {
      * @return Een Schaatser object
      */
     public Schaatser getWinnaar() {
-        HashMap<Float, Schaatser> schaatsersPunten = new HashMap<>();
+        HashMap<Double, Schaatser> schaatsersPunten = new HashMap<>();
         for (Schaatser _schaatser : this.Schaatsers) {
             schaatsersPunten.put(_schaatser.getTotaalPunten(), _schaatser);
         }
 
-        float smallestFloat = 0;
-        for (Float number : schaatsersPunten.keySet()) {
+        double smallestFloat = 0;
+        for (Double number : schaatsersPunten.keySet()) {
             if (smallestFloat == 0) {
                 smallestFloat = number;
             } else if (number < smallestFloat) {
@@ -149,7 +150,8 @@ public class Kampioenschap {
      * @return Een geformateerde string met het scoreboard
      */
     public String getScoreBoard() {
-        String scoreText = "Scoreboard voor kampioenschap " + ":\r\n";
+        DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM);
+        String scoreText = "Scoreboard voor kampioenschap " + this.Naam  + " op " + dateFormat.format(this.Datum)+ ":\r\n";
         for (Schaatser _schaatser : this.Schaatsers) {
             scoreText += "------------------------------------\r\n";
             scoreText += "Naam: " + _schaatser.getNaam() + "\r\n";

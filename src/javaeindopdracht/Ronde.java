@@ -68,7 +68,7 @@ public class Ronde {
      *
      * @return Afstand in Meter
      */
-    public int getAfstand() {
+    public double getAfstand() {
         return this.Afstand;
     }
 
@@ -88,7 +88,7 @@ public class Ronde {
      * voor iedere ronde gelijk is.
      * @return een float met het punten aantal.
      */
-    public float getPunten(float factor) {
+    public double getPunten(double factor) {
         if (this.Tijd.length() == 6) {
 
             String minuten1 = this.Tijd.substring(0, 2);
@@ -99,13 +99,13 @@ public class Ronde {
             int seconden = Integer.valueOf(this.Tijd.substring(2, 4));
             int honderden = Integer.valueOf(this.Tijd.substring(4, 6));
 
-            float punten_seconden = ((minuten * 60) + seconden) * factor;
-            float punten_100en = honderden * factor;
+            double punten_seconden = ((minuten * 60) + seconden) * factor;
+            double punten_100en = honderden * factor;
 
             return punten_seconden + (punten_100en / 100);
-            ///return punten_seconden;
         } else {
-            return -0;
+            return 0;
         }
     }
+
 }
