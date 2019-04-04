@@ -20,60 +20,12 @@ public class JavaEindOpdracht {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
-        /*
-        //Kampioenschap Wedstrijd 1
-        Kampioenschap wedstrijd1 = new Kampioenschap("Wedstrijd 1", new Date("4/2/2019"));
-        wedstrijd1.setRondeTypes(Arrays.asList("500", "1500", "5000", "10000"));
-
-        //Kampioenschap Wedstrijd 1
-        Kampioenschap wedstrijd2 = new Kampioenschap("AKJJODFNOJHFN", new Date("12/31/2051"));
-        wedstrijd2.setRondeTypes(Arrays.asList("500", "1500", "5000", "10000"));
-
-        //Add Sven Kramer
-        wedstrijd1.addSchaatser("Sven Kramer");
-        wedstrijd1.getSchaatserByNaam("Sven Kramer").setRonde(500, "012066");
-        wedstrijd1.getSchaatserByNaam("Sven Kramer").setRonde(1500, "032056");
-        wedstrijd1.getSchaatserByNaam("Sven Kramer").setRonde(5000, "042199");
-        wedstrijd1.getSchaatserByNaam("Sven Kramer").setRonde(10000, "110523");
-
-        //Add Rintje Ritsma
-        wedstrijd1.addSchaatser("Rintje Ritsma");
-        wedstrijd1.getSchaatserByNaam("Rintje Ritsma").setRonde(500, "013388");
-        wedstrijd1.getSchaatserByNaam("Rintje Ritsma").setRonde(1500, "025645");
-        wedstrijd1.getSchaatserByNaam("Rintje Ritsma").setRonde(5000, "054589");
-        wedstrijd1.getSchaatserByNaam("Rintje Ritsma").setRonde(10000, "155669");
-
-        //Add Gianne Romme
-        wedstrijd2.addSchaatser("Gianne Romme");
-        wedstrijd2.getSchaatserByNaam("Gianne Romme").setRonde(500, "012066");
-        wedstrijd2.getSchaatserByNaam("Gianne Romme").setRonde(1500, "032056");
-        wedstrijd2.getSchaatserByNaam("Gianne Romme").setRonde(5000, "042199");
-        wedstrijd2.getSchaatserByNaam("Gianne Romme").setRonde(10000, "110523");
-
-        //Add Ids Postma
-        wedstrijd2.addSchaatser("Ids Postma");
-        wedstrijd2.getSchaatserByNaam("Ids Postma").setRonde(500, "013388");
-        wedstrijd2.getSchaatserByNaam("Ids Postma").setRonde(1500, "025645");
-        wedstrijd2.getSchaatserByNaam("Ids Postma").setRonde(5000, "054589");
-        wedstrijd2.getSchaatserByNaam("Ids Postma").setRonde(10000, "155669");
-
-        Schaatser winnaar1 = wedstrijd1.getWinnaar();
-        System.out.println("Winnaar wedstrijd1: " + winnaar1.getNaam());
-        Schaatser winnaar2 = wedstrijd2.getWinnaar();
-        System.out.println("Winnaar wedstrijd2: " + winnaar2.getNaam());
-
-        System.out.println(wedstrijd1.getScoreBoard());
-        System.out.println(wedstrijd2.getScoreBoard());
-         */
-
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                JFrame window = new SchaatsKampioenschappen("Schaats Kampioenschappen");
-                window.setSize(800, 450);
-                window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                window.setVisible(true);
-            }
+    public static void main(String[] args) {      
+        SwingUtilities.invokeLater(() -> {
+            JFrame window = new SchaatsKampioenschappen("Schaats Kampioenschappen");
+            window.setSize(800, 450);
+            window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            window.setVisible(true);
         });
     }
 
