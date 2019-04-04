@@ -119,6 +119,13 @@ public class Kampioenschap {
         }
         return null;
     }
+    /**
+     * Gets the list of schaatsers
+     * @return schaatsers in List form
+     */
+    public List<Schaatser> getSchaatsers(){
+        return this.Schaatsers;
+    }
 
     /**
      * Haalt de totaal punten op van iedere schaatser en berekent een winnaar
