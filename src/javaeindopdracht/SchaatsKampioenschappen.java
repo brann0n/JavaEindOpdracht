@@ -11,17 +11,17 @@ package javaeindopdracht;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -48,6 +48,12 @@ public class SchaatsKampioenschappen extends JFrame {
     private JList listSchaatsers = new JList(lmSchaatsers);
     private JList listRondes = new JList(lmRondes);
 
+    //UI Labels
+    private JLabel labelKampioenschap = new JLabel("Naam");
+    private JLabel labelSchaatserNaam = new JLabel("Naam");
+    private JLabel labelRondeTijd = new JLabel("Tijd");
+    private JLabel labelRondeAfstand = new JLabel("Afstand");
+    
     //UI TextBoxes
     private JTextField tbKampioenschappen = new JTextField();
     private String tbKampioenschappenText;
@@ -65,6 +71,7 @@ public class SchaatsKampioenschappen extends JFrame {
 
         //define left panel  
         JPanel panelKampioenSchappen = new JPanel();
+        panelKampioenSchappen.setLayout(new FlowLayout(FlowLayout.LEFT));
         panelKampioenSchappen.setBorder(BorderFactory.createTitledBorder("Kampioenschappen"));
         Dimension sizeK = panelKampioenSchappen.getPreferredSize();
         sizeK.width = 250;
@@ -72,6 +79,7 @@ public class SchaatsKampioenschappen extends JFrame {
 
         //define middle panel
         JPanel panelSchaatsers = new JPanel();
+        panelSchaatsers.setLayout(new FlowLayout(FlowLayout.LEFT));
         panelSchaatsers.setBorder(BorderFactory.createTitledBorder("Schaatsers"));
         Dimension sizeS = panelSchaatsers.getPreferredSize();
         sizeS.width = 250;
@@ -79,6 +87,7 @@ public class SchaatsKampioenschappen extends JFrame {
 
         //define right panel
         JPanel panelRonde = new JPanel();
+        panelRonde.setLayout(new FlowLayout(FlowLayout.LEFT));
         panelRonde.setBorder(BorderFactory.createTitledBorder("Rondes"));
         Dimension sizeR = panelRonde.getPreferredSize();
         sizeR.width = 250;
@@ -92,7 +101,7 @@ public class SchaatsKampioenschappen extends JFrame {
         JButton buttonAddR = new JButton("Nieuwe Ronde");
         buttonAddR.setEnabled(false);
 
-        //defin Scrollpanes
+        //define Scrollpanes
         JScrollPane spKampioenschappen = new JScrollPane(listKampioenschappen);
         spKampioenschappen.setPreferredSize(new Dimension(200, 250));
         spKampioenschappen.setAlignmentX(LEFT_ALIGNMENT);
@@ -119,6 +128,16 @@ public class SchaatsKampioenschappen extends JFrame {
         tbRondeAfstand.setEnabled(false);
         tbRondeTijd.setEnabled(false);
 
+        //setup Labels
+        labelKampioenschap.setAlignmentX(LEFT_ALIGNMENT);
+        labelKampioenschap.setPreferredSize(new Dimension(150, 15));
+        labelSchaatserNaam.setAlignmentX(LEFT_ALIGNMENT);
+        labelSchaatserNaam.setPreferredSize(new Dimension(150, 15));
+        labelRondeAfstand.setAlignmentX(LEFT_ALIGNMENT);
+        labelRondeAfstand.setPreferredSize(new Dimension(150, 15));
+        labelRondeTijd.setAlignmentX(LEFT_ALIGNMENT);
+        labelRondeTijd.setPreferredSize(new Dimension(150, 15));
+        
         //event listeners
         tbKampioenschappen.getDocument().addDocumentListener(new DocumentListener() {
             @Override
@@ -234,15 +253,19 @@ public class SchaatsKampioenschappen extends JFrame {
 
         //add components
         panelKampioenSchappen.add(spKampioenschappen);
+        panelKampioenSchappen.add(labelKampioenschap);
         panelKampioenSchappen.add(tbKampioenschappen);
         panelKampioenSchappen.add(buttonAddK);
 
         panelSchaatsers.add(spSchaatsers);
+        panelSchaatsers.add(labelSchaatserNaam);
         panelSchaatsers.add(tbSchaatsers);
         panelSchaatsers.add(buttonAddS);
 
         panelRonde.add(spRondes);
+        panelRonde.add(labelRondeTijd);
         panelRonde.add(tbRondeTijd);
+        panelRonde.add(labelRondeAfstand);
         panelRonde.add(tbRondeAfstand);
         panelRonde.add(buttonAddR);
 
