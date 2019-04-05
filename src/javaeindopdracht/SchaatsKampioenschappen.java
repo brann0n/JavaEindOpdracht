@@ -15,6 +15,7 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import javax.swing.BorderFactory;
@@ -50,13 +51,16 @@ public class SchaatsKampioenschappen extends JFrame {
 
     //UI Labels
     private JLabel labelKampioenschap = new JLabel("Naam");
+    private JLabel labelKampioenschapSetList = new JLabel("Default rondes (komma gescheiden)");
     private JLabel labelSchaatserNaam = new JLabel("Naam");
     private JLabel labelRondeTijd = new JLabel("Tijd");
     private JLabel labelRondeAfstand = new JLabel("Afstand");
-    
+
     //UI TextBoxes
     private JTextField tbKampioenschappen = new JTextField();
     private String tbKampioenschappenText;
+    private JTextField tbKampioenschappenSetList = new JTextField();
+    private String tbKampioenschappenTextSetList;
     private JTextField tbSchaatsers = new JTextField();
     private String tbSchaatsersText;
     private JTextField tbRondeTijd = new JTextField();
@@ -121,6 +125,9 @@ public class SchaatsKampioenschappen extends JFrame {
 
         //setup textfields
         tbKampioenschappen.setPreferredSize(new Dimension(200, 25));
+        tbKampioenschappenSetList.setPreferredSize(new Dimension(200, 25));
+        tbKampioenschappenSetList.setText("500,1500,5000,10000");
+        tbKampioenschappenTextSetList = "500,1500,5000,10000";
         tbSchaatsers.setPreferredSize(new Dimension(200, 25));
         tbSchaatsers.setEnabled(false);
         tbRondeAfstand.setPreferredSize(new Dimension(200, 25));
@@ -131,13 +138,15 @@ public class SchaatsKampioenschappen extends JFrame {
         //setup Labels
         labelKampioenschap.setAlignmentX(LEFT_ALIGNMENT);
         labelKampioenschap.setPreferredSize(new Dimension(150, 15));
+        labelKampioenschapSetList.setAlignmentX(LEFT_ALIGNMENT);
+        labelKampioenschapSetList.setPreferredSize(new Dimension(240, 15));
         labelSchaatserNaam.setAlignmentX(LEFT_ALIGNMENT);
         labelSchaatserNaam.setPreferredSize(new Dimension(150, 15));
         labelRondeAfstand.setAlignmentX(LEFT_ALIGNMENT);
         labelRondeAfstand.setPreferredSize(new Dimension(150, 15));
         labelRondeTijd.setAlignmentX(LEFT_ALIGNMENT);
         labelRondeTijd.setPreferredSize(new Dimension(150, 15));
-        
+
         //event listeners
         tbKampioenschappen.getDocument().addDocumentListener(new DocumentListener() {
             @Override
@@ -164,7 +173,31 @@ public class SchaatsKampioenschappen extends JFrame {
                 }
             }
         });
+        tbKampioenschappenSetList.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                changedUpdate(e);
+            }
 
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                changedUpdate(e);
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                try {
+                    tbKampioenschappenTextSetList = e.getDocument().getText(0, e.getDocument().getLength());
+                    if (tbKampioenschappenTextSetList.length() == 0) {
+                        buttonAddK.setEnabled(false);
+                    } else {
+                        buttonAddK.setEnabled(true);
+                    }
+                } catch (BadLocationException ex) {
+                    System.out.println("error getting text: " + ex.getMessage());
+                }
+            }
+        });       
         tbSchaatsers.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -192,7 +225,9 @@ public class SchaatsKampioenschappen extends JFrame {
         });
 
         buttonAddK.addActionListener((ActionEvent e) -> {
-            kampioenschappen.add(new Kampioenschap(tbKampioenschappenText, new Date()));
+            Kampioenschap tempK = new Kampioenschap(tbKampioenschappenText, new Date());           
+            tempK.setRondeTypes(Arrays.asList(tbKampioenschappenTextSetList.split(",")));
+            kampioenschappen.add(tempK);
             tbKampioenschappen.setText("");
             lmKampioenschappen.clear();
             for (Kampioenschap ks : kampioenschappen) {
@@ -240,14 +275,49 @@ public class SchaatsKampioenschappen extends JFrame {
         listSchaatsers.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
-                System.out.println("Selection changed!");
+                if (!e.getValueIsAdjusting()) {
+                    int selectedIndex = listSchaatsers.getSelectedIndex();
+                    if (selectedIndex != -1) {
+                        Kampioenschap selectedK = kampioenschappen.get(listKampioenschappen.getSelectedIndex());
+                        Schaatser selectedS = selectedK.getSchaatsers().get(selectedIndex);
+                        tbRondeAfstand.setEnabled(true);
+                        tbRondeTijd.setEnabled(true);
+                        lmRondes.clear();
+                        for (Ronde ronde: selectedS.getRondes()) {
+                            lmRondes.addElement(ronde.getAfstand());
+                        }
+                    } else {
+                        //TODO: Disable the other panels
+                        tbRondeAfstand.setEnabled(false);
+                        tbRondeTijd.setEnabled(false);
+                        lmRondes.clear();
+                    }
+                }
             }
         });
 
         listRondes.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
-                System.out.println("Selection changed!");
+                if (!e.getValueIsAdjusting()) {
+                    int selectedIndex = listRondes.getSelectedIndex();
+                    if (selectedIndex != -1) {
+                        Kampioenschap selectedK = kampioenschappen.get(listKampioenschappen.getSelectedIndex());
+                        Schaatser selectedS = selectedK.getSchaatsers().get(selectedIndex);
+                        Ronde selectedR = selectedS.getRondes().get(listSchaatsers.getSelectedIndex());
+                        tbRondeAfstand.setEnabled(true);
+                        tbRondeTijd.setEnabled(true);
+                        lmRondes.clear();
+                        for (Ronde ronde: selectedS.getRondes()) {
+                            lmRondes.addElement(ronde.getAfstand());
+                        }
+                    } else {
+                        //TODO: Disable the other panels
+                        tbRondeAfstand.setEnabled(false);
+                        tbRondeTijd.setEnabled(false);
+                        lmRondes.clear();
+                    }
+                }
             }
         });
 
@@ -255,6 +325,8 @@ public class SchaatsKampioenschappen extends JFrame {
         panelKampioenSchappen.add(spKampioenschappen);
         panelKampioenSchappen.add(labelKampioenschap);
         panelKampioenSchappen.add(tbKampioenschappen);
+        panelKampioenSchappen.add(labelKampioenschapSetList);
+        panelKampioenSchappen.add(tbKampioenschappenSetList);
         panelKampioenSchappen.add(buttonAddK);
 
         panelSchaatsers.add(spSchaatsers);
