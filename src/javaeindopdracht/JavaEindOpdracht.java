@@ -23,7 +23,7 @@ public class JavaEindOpdracht {
     public static void main(String[] args) {      
         SwingUtilities.invokeLater(() -> {
             JFrame window = new SchaatsKampioenschappen("Schaats Kampioenschappen");
-            window.setSize(800, 500);
+            window.setSize(800, 530);
             window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             window.setVisible(true);
         });

@@ -24,6 +24,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
@@ -66,7 +67,7 @@ public class SchaatsKampioenschappen extends JFrame {
     private JTextField tbRondeTijd = new JTextField();
     private String tbRondeTijdText;
     private JTextField tbRondeAfstand = new JTextField();
-    private String tbRondeTijdAfstand;
+    private String tbRondeAfstandText;
 
     public SchaatsKampioenschappen(String title) {
         super(title);
@@ -102,9 +103,13 @@ public class SchaatsKampioenschappen extends JFrame {
         buttonAddK.setEnabled(false);
         JButton buttonAddS = new JButton("Nieuwe Schaatser");
         buttonAddS.setEnabled(false);
-        JButton buttonAddR = new JButton("Nieuwe Ronde");
+        JButton buttonAddR = new JButton("Ronde Instellen");
         buttonAddR.setEnabled(false);
-
+        JButton buttonWinner = new JButton("Bepaal Winnaar");
+        buttonWinner.setEnabled(false);
+        JButton buttonScoreBoard = new JButton("Bekijk scorebord");
+        buttonScoreBoard.setEnabled(false);
+        
         //define Scrollpanes
         JScrollPane spKampioenschappen = new JScrollPane(listKampioenschappen);
         spKampioenschappen.setPreferredSize(new Dimension(200, 250));
@@ -197,7 +202,7 @@ public class SchaatsKampioenschappen extends JFrame {
                     System.out.println("error getting text: " + ex.getMessage());
                 }
             }
-        });       
+        });
         tbSchaatsers.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -223,9 +228,59 @@ public class SchaatsKampioenschappen extends JFrame {
                 }
             }
         });
+        tbRondeAfstand.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                changedUpdate(e);
+            }
 
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                changedUpdate(e);
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                try {
+                    tbRondeAfstandText = e.getDocument().getText(0, e.getDocument().getLength());
+                    if (tbRondeAfstandText.length() == 0) {
+                        buttonAddK.setEnabled(false);
+                    } else {
+                        buttonAddK.setEnabled(true);
+                    }
+                } catch (BadLocationException ex) {
+                    System.out.println("error getting text: " + ex.getMessage());
+                }
+            }
+        });        
+        tbRondeTijd.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                changedUpdate(e);
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                changedUpdate(e);
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                try {
+                    tbRondeTijdText = e.getDocument().getText(0, e.getDocument().getLength());
+                    if (tbRondeTijdText.length() == 0) {
+                        buttonAddK.setEnabled(false);
+                    } else {
+                        buttonAddK.setEnabled(true);
+                    }
+                } catch (BadLocationException ex) {
+                    System.out.println("error getting text: " + ex.getMessage());
+                }
+            }
+        });
+        
         buttonAddK.addActionListener((ActionEvent e) -> {
-            Kampioenschap tempK = new Kampioenschap(tbKampioenschappenText, new Date());           
+            Kampioenschap tempK = new Kampioenschap(tbKampioenschappenText, new Date());
             tempK.setRondeTypes(Arrays.asList(tbKampioenschappenTextSetList.split(",")));
             kampioenschappen.add(tempK);
             tbKampioenschappen.setText("");
@@ -248,8 +303,26 @@ public class SchaatsKampioenschappen extends JFrame {
 
         buttonAddR.addActionListener((ActionEvent e) -> {
             //TODO: get the selected Schaatser and update/add the ronde to it.
+            int selectedIndex = listRondes.getSelectedIndex();
+            if (selectedIndex != -1) {
+                Kampioenschap selectedK = kampioenschappen.get(listKampioenschappen.getSelectedIndex());
+                Schaatser selectedS = selectedK.getSchaatsers().get(listSchaatsers.getSelectedIndex());
+                //Ronde selectedR = selectedS.getRondes().get(selectedIndex);
+                int Afstand = Integer.valueOf(tbRondeAfstandText);
+                selectedS.setRonde(Afstand, tbRondeTijdText);
+            } else {
+                tbRondeAfstand.setText("");
+                tbRondeTijd.setText("");
+            }
         });
 
+        buttonWinner.addActionListener((ActionEvent e) -> {
+            Kampioenschap selectedK = kampioenschappen.get(listKampioenschappen.getSelectedIndex());
+            Schaatser winner = selectedK.getWinnaar();
+            
+            JOptionPane.showMessageDialog(this,"De winnaar van kampioenschap: " + selectedK.getNaam() + ", is: " + winner.getNaam());
+        });
+        
         listKampioenschappen.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
@@ -259,6 +332,7 @@ public class SchaatsKampioenschappen extends JFrame {
                         System.out.println("Selection changed, now selected: " + kampioenschappen.get(selectedIndex).getNaam());
                         //TODO: add and enable buttons: "show scoreboard" en "get winnaar"                       
                         tbSchaatsers.setEnabled(true);
+                        buttonWinner.setEnabled(true);
                         lmSchaatsers.clear();
                         for (Schaatser ks : kampioenschappen.get(selectedIndex).getSchaatsers()) {
                             lmSchaatsers.addElement(ks.getNaam());
@@ -266,6 +340,7 @@ public class SchaatsKampioenschappen extends JFrame {
                     } else {
                         //TODO: Disable the other panels
                         tbSchaatsers.setEnabled(false);
+                        buttonWinner.setEnabled(false);
                         lmSchaatsers.clear();
                     }
                 }
@@ -283,7 +358,7 @@ public class SchaatsKampioenschappen extends JFrame {
                         tbRondeAfstand.setEnabled(true);
                         tbRondeTijd.setEnabled(true);
                         lmRondes.clear();
-                        for (Ronde ronde: selectedS.getRondes()) {
+                        for (Ronde ronde : selectedS.getRondes()) {
                             lmRondes.addElement(ronde.getAfstand());
                         }
                     } else {
@@ -303,19 +378,17 @@ public class SchaatsKampioenschappen extends JFrame {
                     int selectedIndex = listRondes.getSelectedIndex();
                     if (selectedIndex != -1) {
                         Kampioenschap selectedK = kampioenschappen.get(listKampioenschappen.getSelectedIndex());
-                        Schaatser selectedS = selectedK.getSchaatsers().get(selectedIndex);
-                        Ronde selectedR = selectedS.getRondes().get(listSchaatsers.getSelectedIndex());
-                        tbRondeAfstand.setEnabled(true);
-                        tbRondeTijd.setEnabled(true);
-                        lmRondes.clear();
-                        for (Ronde ronde: selectedS.getRondes()) {
-                            lmRondes.addElement(ronde.getAfstand());
-                        }
+                        Schaatser selectedS = selectedK.getSchaatsers().get(listSchaatsers.getSelectedIndex());
+                        Ronde selectedR = selectedS.getRondes().get(selectedIndex);
+                        tbRondeAfstand.setText(Integer.toString(selectedR.getAfstand()));
+                        tbRondeAfstandText = Integer.toString(selectedR.getAfstand());
+                        tbRondeTijd.setText(selectedR.getTijd());
+                        tbRondeTijdText = selectedR.getTijd();
+                        buttonAddR.setEnabled(true);
                     } else {
-                        //TODO: Disable the other panels
-                        tbRondeAfstand.setEnabled(false);
-                        tbRondeTijd.setEnabled(false);
-                        lmRondes.clear();
+                        tbRondeAfstand.setText("");
+                        tbRondeTijd.setText("");
+                        buttonAddR.setEnabled(false);
                     }
                 }
             }
@@ -328,6 +401,8 @@ public class SchaatsKampioenschappen extends JFrame {
         panelKampioenSchappen.add(labelKampioenschapSetList);
         panelKampioenSchappen.add(tbKampioenschappenSetList);
         panelKampioenSchappen.add(buttonAddK);
+        panelKampioenSchappen.add(buttonWinner);
+        panelKampioenSchappen.add(buttonScoreBoard);
 
         panelSchaatsers.add(spSchaatsers);
         panelSchaatsers.add(labelSchaatserNaam);

@@ -69,7 +69,7 @@ public class Ronde {
      *
      * @return Afstand in Meter
      */
-    public double getAfstand() {
+    public int getAfstand() {
         return this.Afstand;
     }
 
