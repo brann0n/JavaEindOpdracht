@@ -131,7 +131,7 @@ public class Kampioenschap {
      * Haalt de totaal punten op van iedere schaatser en berekent een winnaar
      * @return Een Schaatser object
      */
-    public Schaatser getWinnaar() {
+    public Schaatser getWinnaar2() {
         HashMap<Double, Schaatser> schaatsersPunten = new HashMap<>();
         for (Schaatser _schaatser : this.Schaatsers) {
             schaatsersPunten.put(_schaatser.getTotaalPunten(), _schaatser);
@@ -151,6 +151,23 @@ public class Kampioenschap {
         } else {
             return null;
         }
+    }
+    
+    public Schaatser getWinnaar() {       
+        double laagsteSchaatserPunten = 0;
+        Schaatser laagsteSchaaterObject = null;
+ 
+        for (Schaatser _schaatser : this.Schaatsers) {
+            if (laagsteSchaatserPunten == 0) {
+                laagsteSchaatserPunten = _schaatser.getTotaalPunten();
+                laagsteSchaaterObject = _schaatser;
+            } else if (_schaatser.getTotaalPunten() < laagsteSchaatserPunten) {
+                laagsteSchaatserPunten = _schaatser.getTotaalPunten();
+                laagsteSchaaterObject = _schaatser;
+            }
+        }
+
+        return laagsteSchaaterObject;
     }
 
     /**

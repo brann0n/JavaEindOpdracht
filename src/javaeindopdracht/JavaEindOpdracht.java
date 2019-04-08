@@ -10,8 +10,6 @@ package javaeindopdracht;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Arrays;
-import java.util.Date;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
@@ -41,7 +39,6 @@ public class JavaEindOpdracht {
         if (places < 0) {
             throw new IllegalArgumentException();
         }
-
         BigDecimal bd = new BigDecimal(value);
         bd = bd.setScale(places, RoundingMode.HALF_UP);
         return bd.doubleValue();

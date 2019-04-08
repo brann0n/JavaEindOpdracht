@@ -14,10 +14,13 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import javaeindopdracht.NewObjectCreationScreen.ScreenTypes;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -38,7 +41,7 @@ import javax.swing.text.BadLocationException;
 public class SchaatsKampioenschappen extends JFrame {
 
     //Kampioenschappen objects
-    public List<Kampioenschap> kampioenschappen;
+    public static List<Kampioenschap> kampioenschappen;
 
     //UI Listmodel objects, these contain the data that is shown in the list
     private DefaultListModel lmKampioenschappen = new DefaultListModel();
@@ -109,7 +112,7 @@ public class SchaatsKampioenschappen extends JFrame {
         buttonWinner.setEnabled(false);
         JButton buttonScoreBoard = new JButton("Bekijk scorebord");
         buttonScoreBoard.setEnabled(false);
-        
+
         //define Scrollpanes
         JScrollPane spKampioenschappen = new JScrollPane(listKampioenschappen);
         spKampioenschappen.setPreferredSize(new Dimension(200, 250));
@@ -252,7 +255,7 @@ public class SchaatsKampioenschappen extends JFrame {
                     System.out.println("error getting text: " + ex.getMessage());
                 }
             }
-        });        
+        });
         tbRondeTijd.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -278,16 +281,30 @@ public class SchaatsKampioenschappen extends JFrame {
                 }
             }
         });
-        
+
         buttonAddK.addActionListener((ActionEvent e) -> {
-            Kampioenschap tempK = new Kampioenschap(tbKampioenschappenText, new Date());
-            tempK.setRondeTypes(Arrays.asList(tbKampioenschappenTextSetList.split(",")));
-            kampioenschappen.add(tempK);
-            tbKampioenschappen.setText("");
-            lmKampioenschappen.clear();
-            for (Kampioenschap ks : kampioenschappen) {
-                lmKampioenschappen.addElement(ks.getNaam());
-            }
+//            Kampioenschap tempK = new Kampioenschap(tbKampioenschappenText, new Date());
+//            tempK.setRondeTypes(Arrays.asList(tbKampioenschappenTextSetList.split(",")));
+//            kampioenschappen.add(tempK);
+//            tbKampioenschappen.setText("");
+//            lmKampioenschappen.clear();
+//            for (Kampioenschap ks : kampioenschappen) {
+//                lmKampioenschappen.addElement(ks.getNaam());
+//            }
+
+            JFrame requestWindow = new NewObjectCreationScreen(ScreenTypes.CREATE_KAMPIOENSCHAP, "Maak een nieuwe wedstrijd aan");
+            requestWindow.setSize(500, 300);
+            requestWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            requestWindow.setVisible(true);
+            requestWindow.addWindowListener(new WindowAdapter() {
+                public void windowClosed(WindowEvent e) {
+                    System.out.println("jdialog window closed event received");
+                }
+
+                public void windowClosing(WindowEvent e) {
+                    System.out.println("jdialog window closing event received");
+                }
+            });
         });
 
         buttonAddS.addActionListener((ActionEvent e) -> {
@@ -319,10 +336,15 @@ public class SchaatsKampioenschappen extends JFrame {
         buttonWinner.addActionListener((ActionEvent e) -> {
             Kampioenschap selectedK = kampioenschappen.get(listKampioenschappen.getSelectedIndex());
             Schaatser winner = selectedK.getWinnaar();
-            
-            JOptionPane.showMessageDialog(this,"De winnaar van kampioenschap: " + selectedK.getNaam() + ", is: " + winner.getNaam());
+
+            JOptionPane.showMessageDialog(this, "De winnaar van kampioenschap: " + selectedK.getNaam() + ", is: " + winner.getNaam());
         });
-        
+
+        buttonScoreBoard.addActionListener((ActionEvent e) -> {
+            Kampioenschap selectedK = kampioenschappen.get(listKampioenschappen.getSelectedIndex());
+            JOptionPane.showMessageDialog(this, selectedK.getScoreBoard());
+        });
+
         listKampioenschappen.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
@@ -333,6 +355,7 @@ public class SchaatsKampioenschappen extends JFrame {
                         //TODO: add and enable buttons: "show scoreboard" en "get winnaar"                       
                         tbSchaatsers.setEnabled(true);
                         buttonWinner.setEnabled(true);
+                        buttonScoreBoard.setEnabled(true);
                         lmSchaatsers.clear();
                         for (Schaatser ks : kampioenschappen.get(selectedIndex).getSchaatsers()) {
                             lmSchaatsers.addElement(ks.getNaam());
@@ -341,6 +364,7 @@ public class SchaatsKampioenschappen extends JFrame {
                         //TODO: Disable the other panels
                         tbSchaatsers.setEnabled(false);
                         buttonWinner.setEnabled(false);
+                        buttonScoreBoard.setEnabled(false);
                         lmSchaatsers.clear();
                     }
                 }
